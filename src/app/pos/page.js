@@ -219,9 +219,9 @@ export default function POS() {
                     <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
                         <div ref={receiptRef} className="receipt">
                             <div className="r-header">
-                                <h2>Fasil Pharmacy</h2>
-                                <p>123 Medical Ave, Healthcare City</p>
-                                <p>Tel: +1 (800) 555-7476</p>
+                                <h2>Faisal Pharmacy</h2>
+                                <p>Main Pindi Purbia Road, Allah wala Chowk</p>
+                                <p>Tel: +923000171722</p>
                                 <p style={{ marginTop: 6 }}>Date: {receipt.date} | {receipt.saleId}</p>
                                 <p>Customer: {receipt.customer}</p>
                             </div>

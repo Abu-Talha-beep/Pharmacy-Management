@@ -38,7 +38,7 @@ export default function Sidebar() {
                 <button className="sidebar-close-btn" onClick={closeMobile}><X size={20} /></button>
                 <div className="logo">
                     <div className="icon"><Pill size={18} /></div>
-                    <span className="logo-text">Fasil Pharmacy</span>
+                    <span className="logo-text">Faisal Pharmacy</span>
                 </div>
                 <nav>
                     {menu.map(section => (
