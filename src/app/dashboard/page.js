@@ -39,7 +39,7 @@ export default function Dashboard() {
     return (
         <>
             <div className="stats">
-                <div className="stat-card"><div className="ic green"><DollarSign size={22} /></div><div><h3>Total Revenue</h3><div className="val">${totalRevenue.toFixed(2)}</div></div></div>
+                <div className="stat-card"><div className="ic green"><DollarSign size={22} /></div><div><h3>Total Revenue</h3><div className="val">RS {totalRevenue.toFixed(2)}</div></div></div>
                 <div className="stat-card"><div className="ic blue"><ShoppingCart size={22} /></div><div><h3>Total Sales</h3><div className="val">{totalSales}</div></div></div>
                 <div className="stat-card"><div className="ic purple"><Package size={22} /></div><div><h3>Products</h3><div className="val">{totalProducts}</div></div></div>
                 <div className="stat-card"><div className="ic yellow"><Users size={22} /></div><div><h3>Customers</h3><div className="val">{totalCustomers}</div></div></div>

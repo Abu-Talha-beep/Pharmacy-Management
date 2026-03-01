@@ -20,8 +20,13 @@ export default function Inventory() {
     const [viewItem, setViewItem] = useState(null);
     const [scanning, setScanning] = useState(false);
     const [loadingScan, setLoadingScan] = useState(false);
+    const [uniqueSuppliers, setUniqueSuppliers] = useState([]);
 
-    const load = () => fetch('/api/products').then(r => r.json()).then(setProducts);
+    const load = () => fetch('/api/products').then(r => r.json()).then(data => {
+        setProducts(data);
+        const suppliers = [...new Set(data.filter(p => p.supplier).map(p => p.supplier))];
+        setUniqueSuppliers(suppliers);
+    });
     useEffect(() => { load(); }, []);
 
     let filtered = products.filter(p =>
@@ -131,7 +136,7 @@ export default function Inventory() {
                                 <td className="m">{p.category}</td>
                                 <td className="m">{p.batchNo}</td>
                                 <td>{p.quantity}</td>
-                                <td>${Number(p.price).toFixed(2)}</td>
+                                <td>RS {Number(p.price).toFixed(2)}</td>
                                 <td>{p.expiryDate}</td>
                                 <td><span className={`badge ${badge(p.status)}`}>{p.status}</span></td>
                                 <td>
@@ -162,7 +167,7 @@ export default function Inventory() {
                     <div className="modal" onClick={e => e.stopPropagation()}>
                         <h2>Product Details</h2>
                         <div className="form-grid">
-                            {Object.entries({ ID: viewItem.productId, Name: viewItem.name, Category: viewItem.category, Batch: viewItem.batchNo, Quantity: viewItem.quantity, Price: '$' + Number(viewItem.price).toFixed(2), 'Cost Price': '$' + Number(viewItem.costPrice).toFixed(2), Supplier: viewItem.supplier, Expiry: viewItem.expiryDate, Barcode: viewItem.barcode, Status: viewItem.status, 'Min Stock': viewItem.minStock }).map(([k, v]) => (
+                            {Object.entries({ ID: viewItem.productId, Name: viewItem.name, Category: viewItem.category, Batch: viewItem.batchNo, Quantity: viewItem.quantity, Price: 'RS ' + Number(viewItem.price).toFixed(2), 'Cost Price': 'RS ' + Number(viewItem.costPrice).toFixed(2), Supplier: viewItem.supplier, Expiry: viewItem.expiryDate, Barcode: viewItem.barcode, Status: viewItem.status, 'Min Stock': viewItem.minStock }).map(([k, v]) => (
                                 <div className="fg" key={k}><label>{k}</label><input readOnly value={v} /></div>
                             ))}
                         </div>
@@ -184,7 +189,13 @@ export default function Inventory() {
                             <div className="fg"><label>Quantity</label><input type="number" value={form.quantity} onChange={e => setForm({ ...form, quantity: parseInt(e.target.value) || 0 })} /></div>
                             <div className="fg"><label>Selling Price</label><input type="number" step="0.01" value={form.price} onChange={e => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} /></div>
                             <div className="fg"><label>Cost Price</label><input type="number" step="0.01" value={form.costPrice} onChange={e => setForm({ ...form, costPrice: parseFloat(e.target.value) || 0 })} /></div>
-                            <div className="fg"><label>Supplier</label><input value={form.supplier} onChange={e => setForm({ ...form, supplier: e.target.value })} /></div>
+                            <div className="fg">
+                                <label>Supplier</label>
+                                <input list="supplier-list" value={form.supplier} onChange={e => setForm({ ...form, supplier: e.target.value })} />
+                                <datalist id="supplier-list">
+                                    {uniqueSuppliers.map(s => <option key={s} value={s} />)}
+                                </datalist>
+                            </div>
                             <div className="fg"><label>Expiry Date</label><input type="date" value={form.expiryDate} onChange={e => setForm({ ...form, expiryDate: e.target.value })} /></div>
                             <div className="fg"><label>Barcode</label><input value={form.barcode} onChange={e => setForm({ ...form, barcode: e.target.value })} /></div>
                             <div className="fg"><label>Min Stock Level</label><input type="number" value={form.minStock} onChange={e => setForm({ ...form, minStock: parseInt(e.target.value) || 0 })} /></div>

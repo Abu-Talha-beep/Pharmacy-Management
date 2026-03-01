@@ -35,8 +35,8 @@ export default function Sales() {
     return (
         <>
             <div className="stats">
-                <div className="stat-card"><div className="ic green"><DollarSign size={22} /></div><div><h3>Total Revenue</h3><div className="val">${totalRev.toFixed(2)}</div></div></div>
-                <div className="stat-card"><div className="ic blue"><TrendingUp size={22} /></div><div><h3>Profit (~30%)</h3><div className="val">${totalProfit.toFixed(2)}</div></div></div>
+                <div className="stat-card"><div className="ic green"><DollarSign size={22} /></div><div><h3>Total Revenue</h3><div className="val">RS {totalRev.toFixed(2)}</div></div></div>
+                <div className="stat-card"><div className="ic blue"><TrendingUp size={22} /></div><div><h3>Profit (~30%)</h3><div className="val">RS {totalProfit.toFixed(2)}</div></div></div>
                 <div className="stat-card"><div className="ic purple"><ShoppingCart size={22} /></div><div><h3>Total Sales</h3><div className="val">{sales.length}</div></div></div>
                 <div className="stat-card"><div className="ic red"><RotateCcw size={22} /></div><div><h3>Returns</h3><div className="val">{returned.length}</div></div></div>
             </div>
@@ -73,8 +73,16 @@ export default function Sales() {
                 </div>
                 <table className="tbl"><thead><tr><th>Sale ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
                     <tbody>{paged.map(s => (
-                        <tr key={s.id}><td className="m">{s.saleId}</td><td>{s.customer}</td><td>{s.items?.length}</td>
-                            <td style={{ fontWeight: 600 }}>${Number(s.total).toFixed(2)}</td><td>{s.paymentMethod}</td><td>{s.date}</td>
+                        <tr key={s.id}>
+                            <td className="m">{s.saleId}</td><td>{s.customer}</td>
+                            <td>
+                                <ul style={{ margin: 0, paddingLeft: 12, fontSize: '0.8rem', color: 'var(--muted)' }}>
+                                    {s.items?.map((item, idx) => (
+                                        <li key={idx}>{item.name} <span style={{ fontWeight: 600 }}>x{item.qty}</span></li>
+                                    ))}
+                                </ul>
+                            </td>
+                            <td style={{ fontWeight: 600 }}>RS {Number(s.total).toFixed(2)}</td><td>{s.paymentMethod}</td><td>{s.date}</td>
                             <td><span className={`badge ${s.status === 'Completed' ? 'green' : 'red'}`}>{s.status}</span></td>
                             <td><div className="acts">{s.status === 'Completed' && <button className="act" title="Return" onClick={() => handleReturn(s)}><RotateCcw size={15} /></button>}</div></td>
                         </tr>
@@ -84,7 +92,7 @@ export default function Sales() {
                     <span className="show">Showing {Math.min((page - 1) * PAGE + 1, filtered.length)}-{Math.min(page * PAGE, filtered.length)} of {filtered.length}</span>
                     <div className="pages"><button disabled={page === 1} onClick={() => setPage(p => p - 1)}><ChevronLeft size={15} /></button>{Array.from({ length: pages }, (_, i) => <button key={i + 1} className={page === i + 1 ? 'on' : ''} onClick={() => setPage(i + 1)}>{i + 1}</button>)}<button disabled={page === pages} onClick={() => setPage(p => p + 1)}><ChevronRight size={15} /></button></div>
                 </div>
-            </div>
+            </div >
         </>
     );
 }

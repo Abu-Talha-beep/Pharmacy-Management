@@ -112,7 +112,7 @@ export default function POS() {
                     {available.map(p => (
                         <div className="pos-item" key={p.id} onClick={() => addToCart(p)}>
                             <div className="pname">{p.name}</div>
-                            <div className="pprice">${Number(p.price).toFixed(2)}</div>
+                            <div className="pprice">RS {Number(p.price).toFixed(2)}</div>
                             <div className="pstock">Stock: {p.quantity}</div>
                         </div>
                     ))}
@@ -137,7 +137,7 @@ export default function POS() {
                         <div className="cart-item" key={item.id}>
                             <div className="ci-info">
                                 <div className="ci-name">{item.name}</div>
-                                <div className="ci-price">${Number(item.price).toFixed(2)} × {item.qty} = ${(item.price * item.qty).toFixed(2)}</div>
+                                <div className="ci-price">RS {Number(item.price).toFixed(2)} × {item.qty} = RS {(item.price * item.qty).toFixed(2)}</div>
                             </div>
                             <div className="ci-qty">
                                 <button onClick={() => updateQty(item.id, -1)}><Minus size={12} /></button>
@@ -150,12 +150,12 @@ export default function POS() {
                 </div>
 
                 <div className="cart-summary">
-                    <div className="row"><span className="label">Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
+                    <div className="row"><span className="label">Subtotal</span><span>RS {subtotal.toFixed(2)}</span></div>
                     <div className="row">
                         <span className="label">Discount</span>
                         <input type="number" value={discount} onChange={e => setDiscount(parseFloat(e.target.value) || 0)} style={{ width: 70, textAlign: 'right', padding: '2px 6px', border: '1px solid var(--border)', borderRadius: 4 }} />
                     </div>
-                    <div className="row total"><span>Total</span><span>${total.toFixed(2)}</span></div>
+                    <div className="row total"><span>Total</span><span>RS {total.toFixed(2)}</span></div>
                 </div>
 
                 <div className="payment-modes">
@@ -167,7 +167,7 @@ export default function POS() {
                 </div>
 
                 <button className="btn btn-p" style={{ width: '100%', justifyContent: 'center', padding: '12px', marginTop: 8, fontSize: '0.9rem' }} onClick={checkout}>
-                    Complete Sale — ${total.toFixed(2)}
+                    Complete Sale — RS {total.toFixed(2)}
                 </button>
             </div>
 
@@ -187,14 +187,14 @@ export default function POS() {
                                 {receipt.items.map((item, i) => (
                                     <div className="r-item" key={i}>
                                         <span>{item.name} x{item.qty}</span>
-                                        <span>${(item.price * item.qty).toFixed(2)}</span>
+                                        <span>RS {(item.price * item.qty).toFixed(2)}</span>
                                     </div>
                                 ))}
                             </div>
                             <div className="r-totals">
-                                <div className="r-item"><span>Subtotal</span><span>${receipt.subtotal.toFixed(2)}</span></div>
-                                {receipt.discount > 0 && <div className="r-item"><span>Discount</span><span>-${receipt.discount.toFixed(2)}</span></div>}
-                                <div className="r-item" style={{ fontWeight: 'bold', fontSize: 14, borderTop: '1px dashed #000', paddingTop: 4, marginTop: 4 }}><span>TOTAL</span><span>${receipt.total.toFixed(2)}</span></div>
+                                <div className="r-item"><span>Subtotal</span><span>RS {receipt.subtotal.toFixed(2)}</span></div>
+                                {receipt.discount > 0 && <div className="r-item"><span>Discount</span><span>-RS {receipt.discount.toFixed(2)}</span></div>}
+                                <div className="r-item" style={{ fontWeight: 'bold', fontSize: 14, borderTop: '1px dashed #000', paddingTop: 4, marginTop: 4 }}><span>TOTAL</span><span>RS {receipt.total.toFixed(2)}</span></div>
                                 <div className="r-item"><span>Payment</span><span>{receipt.paymentMethod}</span></div>
                             </div>
                             <div className="r-footer">

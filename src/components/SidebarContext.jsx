@@ -17,7 +17,9 @@ export function SidebarProvider({ children }) {
 
     // Auto-close sidebar on route change (useful on mobile)
     useEffect(() => {
-        close();
+        if (pathname) {
+            close();
+        }
     }, [pathname]);
 
     return (

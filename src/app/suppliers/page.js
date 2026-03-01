@@ -31,8 +31,8 @@ export default function Suppliers() {
         <>
             <div className="stats">
                 <div className="stat-card"><div className="ic blue"><CreditCard size={22} /></div><div><h3>Total Suppliers</h3><div className="val">{suppliers.length}</div></div></div>
-                <div className="stat-card"><div className="ic green"><DollarSign size={22} /></div><div><h3>Total Paid</h3><div className="val">${totalPaid.toLocaleString()}</div></div></div>
-                <div className="stat-card"><div className="ic red"><AlertTriangle size={22} /></div><div><h3>Outstanding</h3><div className="val">${totalOutstanding.toLocaleString()}</div></div></div>
+                <div className="stat-card"><div className="ic green"><DollarSign size={22} /></div><div><h3>Total Paid</h3><div className="val">RS {totalPaid.toLocaleString()}</div></div></div>
+                <div className="stat-card"><div className="ic red"><AlertTriangle size={22} /></div><div><h3>Outstanding</h3><div className="val">RS {totalOutstanding.toLocaleString()}</div></div></div>
                 <div className="stat-card"><div className="ic purple"><Phone size={22} /></div><div><h3>Active</h3><div className="val">{suppliers.filter(s => s.status === 'Active').length}</div></div></div>
             </div>
             <div className="tbl-wrap">
@@ -46,8 +46,8 @@ export default function Suppliers() {
                 <table className="tbl"><thead><tr><th>ID</th><th>Name</th><th>Contact</th><th>Phone</th><th>Orders</th><th>Paid</th><th>Outstanding</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody>{paged.map(s => (
                         <tr key={s.id}><td className="m">{s.supplierId}</td><td>{s.name}</td><td>{s.contact}</td><td>{s.phone}</td>
-                            <td>{s.totalOrders}</td><td style={{ fontWeight: 600 }}>${Number(s.totalPaid).toLocaleString()}</td>
-                            <td style={{ color: s.outstanding > 0 ? 'var(--red)' : 'var(--green)', fontWeight: 600 }}>${Number(s.outstanding).toLocaleString()}</td>
+                            <td>{s.totalOrders}</td><td style={{ fontWeight: 600 }}>RS {Number(s.totalPaid).toLocaleString()}</td>
+                            <td style={{ color: s.outstanding > 0 ? 'var(--red)' : 'var(--green)', fontWeight: 600 }}>RS {Number(s.outstanding).toLocaleString()}</td>
                             <td><span className={`badge ${s.status === 'Active' ? 'green' : 'red'}`}>{s.status}</span></td>
                             <td><div className="acts"><button className="act" onClick={() => { setForm(s); setModal('edit') }}><Pencil size={15} /></button><button className="act" onClick={() => handleDel(s.id)}><Trash2 size={15} /></button></div></td>
                         </tr>
@@ -68,7 +68,7 @@ export default function Suppliers() {
                         <div className="fg"><label>Email</label><input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
                         <div className="fg"><label>Phone</label><input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
                         <div className="fg"><label>Address</label><input value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} /></div>
-                        <div className="fg"><label>Outstanding ($)</label><input type="number" value={form.outstanding} onChange={e => setForm({ ...form, outstanding: parseFloat(e.target.value) || 0 })} /></div>
+                        <div className="fg"><label>Outstanding (RS)</label><input type="number" value={form.outstanding} onChange={e => setForm({ ...form, outstanding: parseFloat(e.target.value) || 0 })} /></div>
                         <div className="fg"><label>Status</label><select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}><option>Active</option><option>Inactive</option></select></div>
                     </div>
                     <div className="actions"><button className="btn btn-o" onClick={() => setModal(null)}>Cancel</button><button className="btn btn-p" onClick={handleSave}>Save</button></div>

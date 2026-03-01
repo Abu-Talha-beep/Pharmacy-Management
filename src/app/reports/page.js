@@ -41,9 +41,9 @@ export default function Reports() {
     return (
         <>
             <div className="stats">
-                <div className="stat-card"><div className="ic green"><DollarSign size={22} /></div><div><h3>Stock Value (Cost)</h3><div className="val">${stockValue.toFixed(2)}</div></div></div>
-                <div className="stat-card"><div className="ic blue"><DollarSign size={22} /></div><div><h3>Retail Value</h3><div className="val">${retailValue.toFixed(2)}</div></div></div>
-                <div className="stat-card"><div className="ic purple"><TrendingUp size={22} /></div><div><h3>Potential Profit</h3><div className="val">${potentialProfit.toFixed(2)}</div></div></div>
+                <div className="stat-card"><div className="ic green"><DollarSign size={22} /></div><div><h3>Stock Value (Cost)</h3><div className="val">RS {stockValue.toFixed(2)}</div></div></div>
+                <div className="stat-card"><div className="ic blue"><DollarSign size={22} /></div><div><h3>Retail Value</h3><div className="val">RS {retailValue.toFixed(2)}</div></div></div>
+                <div className="stat-card"><div className="ic purple"><TrendingUp size={22} /></div><div><h3>Potential Profit</h3><div className="val">RS {potentialProfit.toFixed(2)}</div></div></div>
                 <div className="stat-card"><div className="ic yellow"><AlertTriangle size={22} /></div><div><h3>At-Risk Items</h3><div className="val">{nearExpiry.length + expired.length}</div></div></div>
             </div>
 
@@ -53,7 +53,7 @@ export default function Reports() {
                     <ResponsiveContainer width="100%" height={280}>
                         <PieChart><Pie data={catData} cx="50%" cy="50%" outerRadius={90} innerRadius={50} dataKey="value" paddingAngle={3}>
                             {catData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                        </Pie><Tooltip formatter={(v) => `$${v.toLocaleString()}`} contentStyle={{ borderRadius: 8, fontSize: 13 }} /><Legend wrapperStyle={{ fontSize: 12 }} /></PieChart>
+                        </Pie><Tooltip formatter={(v) => `RS ${v.toLocaleString()}`} contentStyle={{ borderRadius: 8, fontSize: 13 }} /><Legend wrapperStyle={{ fontSize: 12 }} /></PieChart>
                     </ResponsiveContainer>
                 </div>
                 <div className="chart-card">

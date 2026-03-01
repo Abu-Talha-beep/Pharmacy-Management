@@ -1,6 +1,7 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Search, Bell, ChevronDown, Menu } from 'lucide-react';
+import { Bell, ChevronDown, Menu } from 'lucide-react';
 import { useSidebar } from '@/components/SidebarContext';
 
 const titles = {
@@ -22,10 +23,22 @@ const titles = {
 export default function Header() {
     const path = usePathname();
     const [title, sub] = titles[path] || ['Dashboard', ''];
-    const { toggle } = useSidebar();
+    const { toggle, isOpen } = useSidebar();
+
+    // Fetch notifications (Low stock / Expiry alerts)
+    const [alerts, setAlerts] = useState(0);
+    useEffect(() => {
+        fetch('/api/products')
+            .then(res => res.json())
+            .then(data => {
+                const lowStockCount = data.filter(p => p.status === 'Low Stock' || p.status === 'Out of Stock').length;
+                setAlerts(lowStockCount);
+            })
+            .catch(() => { });
+    }, []);
 
     return (
-        <header className="header">
+        <header className={`header ${isOpen ? '' : 'collapsed-sidebar'}`}>
             <div className="left" style={{ display: 'flex', alignItems: 'center' }}>
                 <button className="menu-btn" onClick={toggle} aria-label="Toggle Menu">
                     <Menu size={20} />
@@ -36,18 +49,14 @@ export default function Header() {
                 </div>
             </div>
             <div className="right">
-                <div className="search">
-                    <Search size={15} />
-                    <input type="text" placeholder="Search..." />
-                </div>
-                <button className="notif">
+                <button className="notif" title={`${alerts} Alerts`}>
                     <Bell size={18} />
-                    <span className="dot"></span>
+                    {alerts > 0 && <span className="alert-badge">{alerts}</span>}
                 </button>
                 <div className="profile">
-                    <div className="avatar">JB</div>
+                    <div className="avatar">MR</div>
                     <div>
-                        <div className="name">James Bond</div>
+                        <div className="name">Mudassir Rasool</div>
                         <div className="role-tag">Admin</div>
                     </div>
                     <ChevronDown size={14} style={{ color: 'var(--light)' }} />

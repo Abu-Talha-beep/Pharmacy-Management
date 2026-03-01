@@ -41,7 +41,7 @@ export default function Settings() {
                         <div className="fg"><label>Email</label><input value={store.email} onChange={e => setStore({ ...store, email: e.target.value })} /></div>
                         <div className="fg"><label>Phone</label><input value={store.phone} onChange={e => setStore({ ...store, phone: e.target.value })} /></div>
                         <div className="fg"><label>Tax Rate (%)</label><input type="number" value={store.taxRate} onChange={e => setStore({ ...store, taxRate: parseFloat(e.target.value) || 0 })} /></div>
-                        <div className="fg"><label>Currency</label><select value={store.currency} onChange={e => setStore({ ...store, currency: e.target.value })}><option value="USD">USD ($)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option><option value="PKR">PKR (₨)</option></select></div>
+                        <div className="fg"><label>Currency</label><select value={store.currency} onChange={e => setStore({ ...store, currency: e.target.value })}><option value="USD">USD ($)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option><option value="PKR">PKR (RS )</option></select></div>
                         <div className="fg"><label>Low Stock Threshold</label><input type="number" value={store.lowStockThreshold} onChange={e => setStore({ ...store, lowStockThreshold: parseInt(e.target.value) || 0 })} /></div>
                     </div>
                     <div className="fg" style={{ marginTop: 12 }}><label>Address</label><input value={store.address} onChange={e => setStore({ ...store, address: e.target.value })} /></div>
