@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import { SeedInit } from '@/components/SeedInit';
 import ThemeProvider from '@/components/ThemeProvider';
 import { SidebarProvider } from '@/components/SidebarContext';
+import MainWrap from '@/components/MainWrap';
 
 export const metadata = {
   title: 'Fasil Pharmacy — Pharmacy Management System',
@@ -19,10 +20,10 @@ export default function RootLayout({ children }) {
             <SeedInit />
             <div className="app">
               <Sidebar />
-              <div className="main-wrap">
+              <MainWrap>
                 <Header />
                 <main className="main">{children}</main>
-              </div>
+              </MainWrap>
             </div>
           </SidebarProvider>
         </ThemeProvider>

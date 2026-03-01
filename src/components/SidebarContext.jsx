@@ -2,28 +2,36 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-const SidebarContext = createContext({ isOpen: false, toggle: () => { }, close: () => { } });
+const SidebarContext = createContext({
+    mobileOpen: false,
+    collapsed: false,
+    toggleMobile: () => { },
+    closeMobile: () => { },
+    toggleCollapse: () => { },
+});
 
 export function useSidebar() {
     return useContext(SidebarContext);
 }
 
 export function SidebarProvider({ children }) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
     const pathname = usePathname();
 
-    const toggle = () => setIsOpen(p => !p);
-    const close = () => setIsOpen(false);
+    const toggleMobile = () => setMobileOpen(p => !p);
+    const closeMobile = () => setMobileOpen(false);
+    const toggleCollapse = () => setCollapsed(p => !p);
 
-    // Auto-close sidebar on route change (useful on mobile)
+    // Auto-close mobile sidebar on route change
     useEffect(() => {
         if (pathname) {
-            close();
+            closeMobile();
         }
     }, [pathname]);
 
     return (
-        <SidebarContext.Provider value={{ isOpen, toggle, close }}>
+        <SidebarContext.Provider value={{ mobileOpen, collapsed, toggleMobile, closeMobile, toggleCollapse }}>
             {children}
         </SidebarContext.Provider>
     );

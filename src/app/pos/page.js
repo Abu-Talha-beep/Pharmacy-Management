@@ -7,19 +7,16 @@ const ScannerModal = dynamic(() => import('@/components/ScannerModal'), { ssr: f
 
 export default function POS() {
     const [products, setProducts] = useState([]);
-    const [customers, setCustomers] = useState([]);
     const [search, setSearch] = useState('');
     const [cart, setCart] = useState([]);
     const [discount, setDiscount] = useState(0);
     const [payMethod, setPayMethod] = useState('Cash');
-    const [selCustomer, setSelCustomer] = useState('');
     const [receipt, setReceipt] = useState(null);
     const [scanning, setScanning] = useState(false);
     const receiptRef = useRef();
 
     useEffect(() => {
         fetch('/api/products').then(r => r.json()).then(setProducts);
-        fetch('/api/customers').then(r => r.json()).then(setCustomers);
     }, []);
 
     const available = products.filter(p => p.quantity > 0 && (p.name?.toLowerCase().includes(search.toLowerCase()) || p.barcode?.includes(search)));
@@ -89,8 +86,8 @@ export default function POS() {
         if (cart.length === 0) return alert('Cart is empty!');
         const saleData = {
             saleId: 'SAL-' + Date.now().toString(36).toUpperCase(),
-            customer: selCustomer ? customers.find(c => c.id === selCustomer)?.name || 'Walk-in' : 'Walk-in',
-            customerId: selCustomer || null,
+            customer: 'Walk-in',
+            customerId: null,
             items: cart.map(c => ({
                 name: c.name,
                 qty: c.qty,
@@ -107,7 +104,7 @@ export default function POS() {
         };
         await fetch('/api/sales', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(saleData) });
         setReceipt(saleData);
-        setCart([]); setDiscount(0); setSelCustomer('');
+        setCart([]); setDiscount(0);
         fetch('/api/products').then(r => r.json()).then(setProducts);
     };
 
@@ -161,13 +158,6 @@ export default function POS() {
             {/* Cart */}
             <div className="pos-cart">
                 <h3 style={{ fontSize: '0.95rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}><ShoppingCart size={18} /> Cart ({cart.length})</h3>
-
-                <div style={{ margin: '10px 0' }}>
-                    <select style={{ width: '100%', padding: '8px 12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', fontSize: '0.82rem' }} value={selCustomer} onChange={e => setSelCustomer(e.target.value)}>
-                        <option value="">Walk-in Customer</option>
-                        {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </select>
-                </div>
 
                 <div className="cart-items">
                     {cart.length === 0 && <div style={{ textAlign: 'center', padding: 30, color: 'var(--light)', fontSize: '0.82rem' }}>Add products to cart</div>}

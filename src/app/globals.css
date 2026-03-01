@@ -1429,57 +1429,6 @@ html.dark .tbl tbody tr:hover {
     visibility: visible
   }
 
-  /* Desktop Collapse */
-  .sidebar {
-    transition: width 0.3s ease;
-  }
-
-  .sidebar.collapsed {
-    width: 80px;
-  }
-
-  .sidebar.collapsed .logo-text,
-  .sidebar.collapsed .nav-label,
-  .sidebar.collapsed .section-label {
-    display: none;
-  }
-
-  .sidebar.collapsed .logo {
-    justify-content: center;
-    padding: 20px 0;
-  }
-
-  .main-wrap {
-    transition: margin-left 0.3s ease;
-  }
-
-  .main-wrap.expanded {
-    margin-left: 80px;
-  }
-
-  .header.collapsed-sidebar {
-    width: 100%;
-    left: 0;
-  }
-
-  /* Notification Badge */
-  .notif .alert-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    background: var(--red);
-    color: white;
-    font-size: 0.65rem;
-    font-weight: bold;
-    border-radius: 50%;
-    min-width: 16px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--card);
-  }
-
   .receipt {
     position: absolute;
     left: 0;
@@ -1487,9 +1436,54 @@ html.dark .tbl tbody tr:hover {
   }
 }
 
+/* Desktop Sidebar Collapse */
+.sidebar {
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .section-label {
+  display: none;
+}
+
+.sidebar.collapsed .logo {
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.main-wrap {
+  transition: margin-left 0.3s ease;
+}
+
+.main-wrap.collapsed-sidebar {
+  margin-left: 80px;
+}
+
+/* Notification Badge */
+.notif .alert-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--red);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: bold;
+  border-radius: 50%;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--card);
+}
+
 /* Mobile Responsiveness */
 .menu-btn {
-  display: none;
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
@@ -1497,6 +1491,9 @@ html.dark .tbl tbody tr:hover {
   padding: 8px;
   border-radius: var(--radius-md);
   margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-btn:hover {

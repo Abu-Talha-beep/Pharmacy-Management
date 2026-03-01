@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, Package, ShoppingCart, DollarSign, TrendingUp, FileText, Settings as SettingsIcon, Pill, X } from 'lucide-react';
+import { LayoutGrid, Package, ShoppingCart, DollarSign, FileText, Settings as SettingsIcon, Pill, X } from 'lucide-react';
 import { useSidebar } from '@/components/SidebarContext';
 
 const menu = [
@@ -27,14 +27,16 @@ const menu = [
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const { isOpen, close, toggle } = useSidebar();
+    const { mobileOpen, collapsed, closeMobile } = useSidebar();
+
+    const sidebarClass = `sidebar ${mobileOpen ? 'open' : ''} ${collapsed ? 'collapsed' : ''}`;
 
     return (
         <>
-            <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={close}></div>
-            <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-                <button className="sidebar-close-btn" onClick={close}><X size={20} /></button>
-                <div className="logo" onClick={toggle} style={{ cursor: 'pointer' }}>
+            <div className={`sidebar-overlay ${mobileOpen ? 'open' : ''}`} onClick={closeMobile}></div>
+            <aside className={sidebarClass}>
+                <button className="sidebar-close-btn" onClick={closeMobile}><X size={20} /></button>
+                <div className="logo">
                     <div className="icon"><Pill size={18} /></div>
                     <span className="logo-text">Fasil Pharmacy</span>
                 </div>

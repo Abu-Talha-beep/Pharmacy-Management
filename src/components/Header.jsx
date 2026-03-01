@@ -8,22 +8,15 @@ const titles = {
     '/dashboard': ['Overview', 'Welcome back to Fasil Pharmacy dashboard'],
     '/inventory': ['Inventory', 'Manage your medicine stock'],
     '/pos': ['Point of Sale', 'Process sales and billing'],
-    '/purchases': ['Purchases', 'Manage purchase orders'],
-    '/sales': ['Sales', 'Track revenue and transactions'],
-    '/customers': ['Customers', 'Manage customer profiles'],
-    '/suppliers': ['Suppliers', 'Manage supplier relationships'],
-    '/expiry': ['Expiry & Batch', 'Track expiry dates and batches'],
-    '/prescriptions': ['Prescriptions', 'Manage prescription records'],
-    '/audit': ['Audit Logs', 'Track all system activities'],
+    '/sales': ['Sales History', 'Track revenue and transactions'],
     '/reports': ['Reports', 'Analytics and insights'],
     '/settings': ['Settings', 'System configuration'],
-    '/help': ['Help & Support', 'Get assistance'],
 };
 
 export default function Header() {
     const path = usePathname();
     const [title, sub] = titles[path] || ['Dashboard', ''];
-    const { toggle, isOpen } = useSidebar();
+    const { toggleMobile, toggleCollapse } = useSidebar();
 
     // Fetch notifications (Low stock / Expiry alerts)
     const [alerts, setAlerts] = useState(0);
@@ -37,10 +30,19 @@ export default function Header() {
             .catch(() => { });
     }, []);
 
+    const handleMenuClick = () => {
+        // On mobile (<=768px) toggle mobile sidebar, on desktop toggle collapse
+        if (window.innerWidth <= 768) {
+            toggleMobile();
+        } else {
+            toggleCollapse();
+        }
+    };
+
     return (
-        <header className={`header ${isOpen ? '' : 'collapsed-sidebar'}`}>
+        <header className="header">
             <div className="left" style={{ display: 'flex', alignItems: 'center' }}>
-                <button className="menu-btn" onClick={toggle} aria-label="Toggle Menu">
+                <button className="menu-btn" onClick={handleMenuClick} aria-label="Toggle Menu">
                     <Menu size={20} />
                 </button>
                 <div>
