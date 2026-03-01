@@ -1,6 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Package, AlertTriangle, XCircle, Search, Plus, Filter, Download, Eye, Pencil, Trash2, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Package, AlertTriangle, XCircle, Search, Plus, Filter, Download, Eye, Pencil, Trash2, ChevronLeft, ChevronRight, X, ScanLine, Loader2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const ScannerModal = dynamic(() => import('@/components/ScannerModal'), { ssr: false });
 
 const PAGE = 8;
 const emptyProduct = { productId: '', name: '', category: 'Pain Relievers', batchNo: '', quantity: 0, price: 0, costPrice: 0, supplier: '', expiryDate: '', barcode: '', minStock: 50 };
@@ -15,6 +18,8 @@ export default function Inventory() {
     const [modal, setModal] = useState(null); // 'add' | 'edit' | 'view'
     const [form, setForm] = useState(emptyProduct);
     const [viewItem, setViewItem] = useState(null);
+    const [scanning, setScanning] = useState(false);
+    const [loadingScan, setLoadingScan] = useState(false);
 
     const load = () => fetch('/api/products').then(r => r.json()).then(setProducts);
     useEffect(() => { load(); }, []);
@@ -47,6 +52,40 @@ export default function Inventory() {
         load();
     };
 
+    const handleScan = async (barcode) => {
+        setScanning(false);
+        setLoadingScan(true);
+        try {
+            // Use OpenFoodFacts API as a free public fallback
+            const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
+            const data = await res.json();
+
+            let name = '';
+            if (data.status === 1 && data.product) {
+                name = data.product.product_name || data.product.generic_name || '';
+            }
+
+            setForm({
+                ...emptyProduct,
+                productId: 'MED-' + String(products.length + 1).padStart(3, '0'),
+                barcode: barcode,
+                name: name
+            });
+            setModal('add');
+        } catch (err) {
+            console.error('API lookup failed:', err);
+            // Fallback: still open modal with just the barcode
+            setForm({
+                ...emptyProduct,
+                productId: 'MED-' + String(products.length + 1).padStart(3, '0'),
+                barcode: barcode
+            });
+            setModal('add');
+        } finally {
+            setLoadingScan(false);
+        }
+    };
+
     const badge = s => s === 'In Stock' ? 'green' : s === 'Low Stock' ? 'yellow' : 'red';
 
     return (
@@ -73,7 +112,11 @@ export default function Inventory() {
                         </select>
                     </div>
                     <div className="right">
-                        <button className="btn btn-p" onClick={() => { setForm({ ...emptyProduct, productId: 'MED-' + String(products.length + 1).padStart(3, '0') }); setModal('add') }}><Plus size={15} />Add Product</button>
+                        <button className="btn btn-p" onClick={() => setScanning(true)} disabled={loadingScan}>
+                            {loadingScan ? <Loader2 size={15} className="spin" /> : <ScanLine size={15} />}
+                            {loadingScan ? 'Looking up...' : 'Scan to Add'}
+                        </button>
+                        <button className="btn btn-o" onClick={() => { setForm({ ...emptyProduct, productId: 'MED-' + String(products.length + 1).padStart(3, '0') }); setModal('add') }}><Plus size={15} />Add Product</button>
                         <button className="btn btn-o"><Download size={15} />Export</button>
                     </div>
                 </div>
@@ -153,6 +196,8 @@ export default function Inventory() {
                     </div>
                 </div>
             )}
+
+            {scanning && <ScannerModal onScan={handleScan} onClose={() => setScanning(false)} />}
         </>
     );
 }
