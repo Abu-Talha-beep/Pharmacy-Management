@@ -1,6 +1,10 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, X, Minus, Plus, ShoppingCart, CreditCard, Banknote, Smartphone, Printer, ScanLine } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const ScannerModal = dynamic(() => import('@/components/ScannerModal'), { ssr: false });
+
 
 
 export default function POS() {
@@ -14,52 +18,6 @@ export default function POS() {
     const [receipt, setReceipt] = useState(null);
     const [scanning, setScanning] = useState(false);
     const receiptRef = useRef();
-    const scannerRef = useRef(null);
-
-    const stopScanner = useCallback(() => {
-        if (scannerRef.current) {
-            scannerRef.current.stop().catch(() => { });
-            scannerRef.current.clear().catch(() => { });
-            scannerRef.current = null;
-        }
-        setScanning(false);
-    }, []);
-
-    const startScanner = useCallback(async () => {
-        setScanning(true);
-        // Dynamic import to avoid SSR issues
-        const { Html5Qrcode } = await import('html5-qrcode');
-        setTimeout(() => {
-            const scanner = new Html5Qrcode('barcode-reader');
-            scannerRef.current = scanner;
-            scanner.start(
-                { facingMode: 'environment' },
-                { fps: 10, qrbox: { width: 250, height: 150 } },
-                (decodedText) => {
-                    // Find product by barcode
-                    const product = products.find(p => p.barcode === decodedText && p.quantity > 0);
-                    if (product) {
-                        addToCart(product);
-                        stopScanner();
-                    } else {
-                        // Try partial match
-                        const partial = products.find(p => p.barcode?.includes(decodedText) && p.quantity > 0);
-                        if (partial) {
-                            addToCart(partial);
-                            stopScanner();
-                        } else {
-                            alert('Product not found for barcode: ' + decodedText);
-                            stopScanner();
-                        }
-                    }
-                },
-                () => { } // Ignore scan errors (no barcode in frame)
-            ).catch((err) => {
-                alert('Camera error: ' + err.message);
-                stopScanner();
-            });
-        }, 100);
-    }, [products, addToCart, stopScanner]);
 
     useEffect(() => {
         fetch('/api/products').then(r => r.json()).then(setProducts);
@@ -78,6 +36,23 @@ export default function POS() {
             return [...prev, { id: product.id, name: product.name, price: product.price, qty: 1, maxQty: product.quantity }];
         });
     };
+
+    const handleScan = useCallback((decodedText) => {
+        const product = products.find(p => p.barcode === decodedText && p.quantity > 0);
+        if (product) {
+            addToCart(product);
+            setScanning(false);
+        } else {
+            const partial = products.find(p => p.barcode?.includes(decodedText) && p.quantity > 0);
+            if (partial) {
+                addToCart(partial);
+                setScanning(false);
+            } else {
+                alert('Product not found for barcode: ' + decodedText);
+                setScanning(false);
+            }
+        }
+    }, [products, addToCart]);
 
     const updateQty = (id, delta) => {
         setCart(prev => prev.map(c => {
@@ -129,7 +104,7 @@ export default function POS() {
                         <Search size={15} />
                         <input placeholder="Search products or scan barcode..." value={search} onChange={e => setSearch(e.target.value)} style={{ width: '100%' }} />
                     </div>
-                    <button className="btn btn-p" onClick={startScanner} style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                    <button className="btn btn-p" onClick={() => setScanning(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
                         <ScanLine size={16} /> Scan
                     </button>
                 </div>
@@ -234,6 +209,8 @@ export default function POS() {
                     </div>
                 </div>
             )}
+
+            {scanning && <ScannerModal onScan={handleScan} onClose={() => setScanning(false)} />}
         </div>
     );
 }
