@@ -1,6 +1,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import { Search, Bell, ChevronDown } from 'lucide-react';
+import { Search, Bell, ChevronDown, Menu } from 'lucide-react';
+import { useSidebar } from '@/components/SidebarContext';
 
 const titles = {
     '/dashboard': ['Overview', 'Welcome back to Fasil Pharmacy dashboard'],
@@ -21,11 +22,18 @@ const titles = {
 export default function Header() {
     const path = usePathname();
     const [title, sub] = titles[path] || ['Dashboard', ''];
+    const { toggle } = useSidebar();
+
     return (
         <header className="header">
-            <div className="left">
-                <h1>{title}</h1>
-                <p>{sub}</p>
+            <div className="left" style={{ display: 'flex', alignItems: 'center' }}>
+                <button className="menu-btn" onClick={toggle} aria-label="Toggle Menu">
+                    <Menu size={20} />
+                </button>
+                <div>
+                    <h1>{title}</h1>
+                    <p>{sub}</p>
+                </div>
             </div>
             <div className="right">
                 <div className="search">

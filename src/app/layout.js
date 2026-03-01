@@ -3,6 +3,7 @@ import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { SeedInit } from '@/components/SeedInit';
 import ThemeProvider from '@/components/ThemeProvider';
+import { SidebarProvider } from '@/components/SidebarContext';
 
 export const metadata = {
   title: 'Fasil Pharmacy — Pharmacy Management System',
@@ -14,14 +15,16 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider>
-          <SeedInit />
-          <div className="app">
-            <Sidebar />
-            <div className="main-wrap">
-              <Header />
-              <main className="main">{children}</main>
+          <SidebarProvider>
+            <SeedInit />
+            <div className="app">
+              <Sidebar />
+              <div className="main-wrap">
+                <Header />
+                <main className="main">{children}</main>
+              </div>
             </div>
-          </div>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>
