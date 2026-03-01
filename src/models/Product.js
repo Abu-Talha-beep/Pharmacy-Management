@@ -8,6 +8,7 @@ const ProductSchema = new mongoose.Schema({
     quantity: { type: Number, default: 0 },
     price: { type: Number, default: 0 },
     costPrice: { type: Number, default: 0 },
+    unitsPerPack: { type: Number, default: 1 },
     supplier: { type: String, default: '' },
     expiryDate: { type: String, default: '' },
     barcode: { type: String, default: '' },

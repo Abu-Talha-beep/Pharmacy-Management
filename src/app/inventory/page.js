@@ -167,7 +167,7 @@ export default function Inventory() {
                     <div className="modal" onClick={e => e.stopPropagation()}>
                         <h2>Product Details</h2>
                         <div className="form-grid">
-                            {Object.entries({ ID: viewItem.productId, Name: viewItem.name, Category: viewItem.category, Batch: viewItem.batchNo, Quantity: viewItem.quantity, Price: 'RS ' + Number(viewItem.price).toFixed(2), 'Cost Price': 'RS ' + Number(viewItem.costPrice).toFixed(2), Supplier: viewItem.supplier, Expiry: viewItem.expiryDate, Barcode: viewItem.barcode, Status: viewItem.status, 'Min Stock': viewItem.minStock }).map(([k, v]) => (
+                            {Object.entries({ ID: viewItem.productId, Name: viewItem.name, Category: viewItem.category, Batch: viewItem.batchNo, Quantity: viewItem.quantity, 'Units/Pack': viewItem.unitsPerPack || 1, Price: 'RS ' + Number(viewItem.price).toFixed(2), 'Price/Tablet': 'RS ' + (Number(viewItem.price) / (viewItem.unitsPerPack || 1)).toFixed(2), 'Cost Price': 'RS ' + Number(viewItem.costPrice).toFixed(2), Supplier: viewItem.supplier, Expiry: viewItem.expiryDate, Barcode: viewItem.barcode, Status: viewItem.status, 'Min Stock': viewItem.minStock }).map(([k, v]) => (
                                 <div className="fg" key={k}><label>{k}</label><input readOnly value={v} /></div>
                             ))}
                         </div>
@@ -187,8 +187,9 @@ export default function Inventory() {
                             <div className="fg"><label>Category</label><select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>{categories.map(c => <option key={c}>{c}</option>)}</select></div>
                             <div className="fg"><label>Batch No</label><input value={form.batchNo} onChange={e => setForm({ ...form, batchNo: e.target.value })} /></div>
                             <div className="fg"><label>Quantity</label><input type="number" value={form.quantity} onChange={e => setForm({ ...form, quantity: parseInt(e.target.value) || 0 })} /></div>
-                            <div className="fg"><label>Selling Price</label><input type="number" step="0.01" value={form.price} onChange={e => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} /></div>
+                            <div className="fg"><label>Selling Price (per pack)</label><input type="number" step="0.01" value={form.price} onChange={e => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} /></div>
                             <div className="fg"><label>Cost Price</label><input type="number" step="0.01" value={form.costPrice} onChange={e => setForm({ ...form, costPrice: parseFloat(e.target.value) || 0 })} /></div>
+                            <div className="fg"><label>Units Per Pack (tablets)</label><input type="number" min="1" value={form.unitsPerPack || 1} onChange={e => setForm({ ...form, unitsPerPack: parseInt(e.target.value) || 1 })} /></div>
                             <div className="fg">
                                 <label>Supplier</label>
                                 <input list="supplier-list" value={form.supplier} onChange={e => setForm({ ...form, supplier: e.target.value })} />

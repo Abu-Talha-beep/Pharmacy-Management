@@ -5,8 +5,6 @@ import dynamic from 'next/dynamic';
 
 const ScannerModal = dynamic(() => import('@/components/ScannerModal'), { ssr: false });
 
-
-
 export default function POS() {
     const [products, setProducts] = useState([]);
     const [customers, setCustomers] = useState([]);
@@ -26,26 +24,44 @@ export default function POS() {
 
     const available = products.filter(p => p.quantity > 0 && (p.name?.toLowerCase().includes(search.toLowerCase()) || p.barcode?.includes(search)));
 
-    const addToCart = (product) => {
+    // sellMode: 'pack' or 'tablet'
+    const addToCart = (product, sellMode = 'pack') => {
+        const unitsPerPack = product.unitsPerPack || 1;
+        const unitPrice = sellMode === 'tablet'
+            ? Number((product.price / unitsPerPack).toFixed(2))
+            : Number(product.price);
+        // Max stock: in pack mode = packs, in tablet mode = packs * unitsPerPack
+        const maxQty = sellMode === 'tablet' ? product.quantity * unitsPerPack : product.quantity;
+        const cartKey = product.id + '-' + sellMode;
+
         setCart(prev => {
-            const existing = prev.find(c => c.id === product.id);
+            const existing = prev.find(c => c.cartKey === cartKey);
             if (existing) {
-                if (existing.qty >= product.quantity) return prev; // Don't exceed stock
-                return prev.map(c => c.id === product.id ? { ...c, qty: c.qty + 1 } : c);
+                if (existing.qty >= maxQty) return prev;
+                return prev.map(c => c.cartKey === cartKey ? { ...c, qty: c.qty + 1 } : c);
             }
-            return [...prev, { id: product.id, name: product.name, price: product.price, qty: 1, maxQty: product.quantity }];
+            return [...prev, {
+                cartKey,
+                id: product.id,
+                name: product.name,
+                price: unitPrice,
+                qty: 1,
+                maxQty,
+                sellMode,
+                unitsPerPack
+            }];
         });
     };
 
     const handleScan = useCallback((decodedText) => {
         const product = products.find(p => p.barcode === decodedText && p.quantity > 0);
         if (product) {
-            addToCart(product);
+            addToCart(product, 'pack');
             setScanning(false);
         } else {
             const partial = products.find(p => p.barcode?.includes(decodedText) && p.quantity > 0);
             if (partial) {
-                addToCart(partial);
+                addToCart(partial, 'pack');
                 setScanning(false);
             } else {
                 alert('Product not found for barcode: ' + decodedText);
@@ -54,9 +70,9 @@ export default function POS() {
         }
     }, [products, addToCart]);
 
-    const updateQty = (id, delta) => {
+    const updateQty = (cartKey, delta) => {
         setCart(prev => prev.map(c => {
-            if (c.id !== id) return c;
+            if (c.cartKey !== cartKey) return c;
             const newQty = c.qty + delta;
             if (newQty <= 0) return null;
             if (newQty > c.maxQty) return c;
@@ -64,10 +80,10 @@ export default function POS() {
         }).filter(Boolean));
     };
 
-    const removeFromCart = (id) => setCart(prev => prev.filter(c => c.id !== id));
+    const removeFromCart = (cartKey) => setCart(prev => prev.filter(c => c.cartKey !== cartKey));
 
     const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
-    const total = subtotal - discount;
+    const total = Math.max(0, subtotal - discount);
 
     const checkout = async () => {
         if (cart.length === 0) return alert('Cart is empty!');
@@ -75,8 +91,16 @@ export default function POS() {
             saleId: 'SAL-' + Date.now().toString(36).toUpperCase(),
             customer: selCustomer ? customers.find(c => c.id === selCustomer)?.name || 'Walk-in' : 'Walk-in',
             customerId: selCustomer || null,
-            items: cart.map(c => ({ name: c.name, qty: c.qty, price: c.price })),
-            subtotal, discount, total: Number(total.toFixed(2)),
+            items: cart.map(c => ({
+                name: c.name,
+                qty: c.qty,
+                price: c.price,
+                sellMode: c.sellMode,
+                unitsPerPack: c.unitsPerPack
+            })),
+            subtotal: Number(subtotal.toFixed(2)),
+            discount,
+            total: Number(total.toFixed(2)),
             paymentMethod: payMethod,
             date: new Date().toISOString().split('T')[0],
             status: 'Completed'
@@ -84,7 +108,6 @@ export default function POS() {
         await fetch('/api/sales', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(saleData) });
         setReceipt(saleData);
         setCart([]); setDiscount(0); setSelCustomer('');
-        // Refresh products (stock changed)
         fetch('/api/products').then(r => r.json()).then(setProducts);
     };
 
@@ -109,13 +132,28 @@ export default function POS() {
                     </button>
                 </div>
                 <div className="pos-grid">
-                    {available.map(p => (
-                        <div className="pos-item" key={p.id} onClick={() => addToCart(p)}>
-                            <div className="pname">{p.name}</div>
-                            <div className="pprice">RS {Number(p.price).toFixed(2)}</div>
-                            <div className="pstock">Stock: {p.quantity}</div>
-                        </div>
-                    ))}
+                    {available.map(p => {
+                        const upp = p.unitsPerPack || 1;
+                        const tabletPrice = (p.price / upp).toFixed(2);
+                        return (
+                            <div className="pos-item" key={p.id} style={{ cursor: 'default' }}>
+                                <div className="pname">{p.name}</div>
+                                <div className="pprice">RS {Number(p.price).toFixed(2)} <span style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>/pack</span></div>
+                                {upp > 1 && <div style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 600 }}>RS {tabletPrice} /tablet ({upp} units)</div>}
+                                <div className="pstock">Stock: {p.quantity} packs</div>
+                                <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
+                                    <button className="btn btn-p" style={{ flex: 1, fontSize: '0.72rem', padding: '5px 8px', justifyContent: 'center' }} onClick={() => addToCart(p, 'pack')}>
+                                        + Pack
+                                    </button>
+                                    {upp > 1 && (
+                                        <button className="btn btn-o" style={{ flex: 1, fontSize: '0.72rem', padding: '5px 8px', justifyContent: 'center', borderColor: 'var(--green)', color: 'var(--green)' }} onClick={() => addToCart(p, 'tablet')}>
+                                            + Tablet
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
                     {available.length === 0 && <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: 40, color: 'var(--light)' }}>No products found</div>}
                 </div>
             </div>
@@ -134,16 +172,30 @@ export default function POS() {
                 <div className="cart-items">
                     {cart.length === 0 && <div style={{ textAlign: 'center', padding: 30, color: 'var(--light)', fontSize: '0.82rem' }}>Add products to cart</div>}
                     {cart.map(item => (
-                        <div className="cart-item" key={item.id}>
+                        <div className="cart-item" key={item.cartKey}>
                             <div className="ci-info">
-                                <div className="ci-name">{item.name}</div>
+                                <div className="ci-name">
+                                    {item.name}
+                                    <span style={{
+                                        marginLeft: 6,
+                                        fontSize: '0.65rem',
+                                        fontWeight: 700,
+                                        padding: '1px 6px',
+                                        borderRadius: 4,
+                                        background: item.sellMode === 'tablet' ? 'var(--green-bg, #dcfce7)' : 'var(--blue-bg, #dbeafe)',
+                                        color: item.sellMode === 'tablet' ? 'var(--green, #16a34a)' : 'var(--blue, #2563eb)',
+                                        textTransform: 'uppercase'
+                                    }}>
+                                        {item.sellMode}
+                                    </span>
+                                </div>
                                 <div className="ci-price">RS {Number(item.price).toFixed(2)} × {item.qty} = RS {(item.price * item.qty).toFixed(2)}</div>
                             </div>
                             <div className="ci-qty">
-                                <button onClick={() => updateQty(item.id, -1)}><Minus size={12} /></button>
+                                <button onClick={() => updateQty(item.cartKey, -1)}><Minus size={12} /></button>
                                 <span>{item.qty}</span>
-                                <button onClick={() => updateQty(item.id, 1)}><Plus size={12} /></button>
-                                <button onClick={() => removeFromCart(item.id)} style={{ color: 'var(--red)', background: 'var(--red-bg)' }}><X size={12} /></button>
+                                <button onClick={() => updateQty(item.cartKey, 1)}><Plus size={12} /></button>
+                                <button onClick={() => removeFromCart(item.cartKey)} style={{ color: 'var(--red)', background: 'var(--red-bg)' }}><X size={12} /></button>
                             </div>
                         </div>
                     ))}
@@ -186,7 +238,7 @@ export default function POS() {
                             <div className="r-items">
                                 {receipt.items.map((item, i) => (
                                     <div className="r-item" key={i}>
-                                        <span>{item.name} x{item.qty}</span>
+                                        <span>{item.name} x{item.qty} {item.sellMode === 'tablet' ? '(tablets)' : '(packs)'}</span>
                                         <span>RS {(item.price * item.qty).toFixed(2)}</span>
                                     </div>
                                 ))}

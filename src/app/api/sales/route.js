@@ -18,7 +18,15 @@ export async function POST(req) {
     for (const item of data.items) {
         const product = await Product.findOne({ name: item.name });
         if (product) {
-            let newQty = Math.max(0, product.quantity - item.qty);
+            let deductPacks;
+            if (item.sellMode === 'tablet') {
+                // Convert tablets sold to packs consumed (round up)
+                const upp = item.unitsPerPack || product.unitsPerPack || 1;
+                deductPacks = Math.ceil(item.qty / upp);
+            } else {
+                deductPacks = item.qty;
+            }
+            let newQty = Math.max(0, product.quantity - deductPacks);
             let status = newQty <= 0 ? 'Out of Stock' : newQty <= (product.minStock || 50) ? 'Low Stock' : 'In Stock';
             await Product.findByIdAndUpdate(product._id, { quantity: newQty, status });
         }

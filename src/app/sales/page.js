@@ -78,7 +78,7 @@ export default function Sales() {
                             <td>
                                 <ul style={{ margin: 0, paddingLeft: 12, fontSize: '0.8rem', color: 'var(--muted)' }}>
                                     {s.items?.map((item, idx) => (
-                                        <li key={idx}>{item.name} <span style={{ fontWeight: 600 }}>x{item.qty}</span></li>
+                                        <li key={idx}>{item.name} <span style={{ fontWeight: 600 }}>x{item.qty} {item.sellMode === 'tablet' ? '(tablets)' : '(packs)'}</span></li>
                                     ))}
                                 </ul>
                             </td>
