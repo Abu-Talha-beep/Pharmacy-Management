@@ -1,0 +1,127 @@
+[
+  {
+    "id": "5e9fec41-30f7-458d-9423-018a0dac598a",
+    "saleId": "SAL-001",
+    "customer": "Sarah Johnson",
+    "items": [
+      {
+        "name": "Paracetamol 500mg",
+        "qty": 2,
+        "price": 5
+      },
+      {
+        "name": "Cetirizine 10mg",
+        "qty": 1,
+        "price": 3.5
+      }
+    ],
+    "subtotal": 13.5,
+    "tax": 2.43,
+    "discount": 0,
+    "total": 15.93,
+    "paymentMethod": "Credit Card",
+    "date": "2026-02-28",
+    "status": "Completed",
+    "createdAt": "2026-03-01T08:50:59.901Z",
+    "updatedAt": "2026-03-01T08:50:59.901Z"
+  },
+  {
+    "id": "bd4994b9-8c2e-4044-a9ba-cbf8480f3f8b",
+    "saleId": "SAL-002",
+    "customer": "Mike Peters",
+    "items": [
+      {
+        "name": "Salbutamol Inhaler",
+        "qty": 1,
+        "price": 22
+      }
+    ],
+    "subtotal": 22,
+    "tax": 3.96,
+    "discount": 2,
+    "total": 23.96,
+    "paymentMethod": "Cash",
+    "date": "2026-02-28",
+    "status": "Completed",
+    "createdAt": "2026-03-01T08:50:59.902Z",
+    "updatedAt": "2026-03-01T08:50:59.902Z"
+  },
+  {
+    "id": "ee31e282-ae85-4a03-9676-7c980a014b64",
+    "saleId": "SAL-003",
+    "customer": "Emily Davis",
+    "items": [
+      {
+        "name": "Metformin 500mg",
+        "qty": 3,
+        "price": 6.2
+      },
+      {
+        "name": "Atorvastatin 20mg",
+        "qty": 1,
+        "price": 12.5
+      }
+    ],
+    "subtotal": 31.1,
+    "tax": 5.6,
+    "discount": 0,
+    "total": 36.7,
+    "paymentMethod": "Credit Card",
+    "date": "2026-02-27",
+    "status": "Completed",
+    "createdAt": "2026-03-01T08:50:59.903Z",
+    "updatedAt": "2026-03-01T08:50:59.903Z"
+  },
+  {
+    "id": "3a8630a9-1bb4-4bae-ad9d-5505978e2d1b",
+    "saleId": "SAL-004",
+    "customer": "James Wilson",
+    "items": [
+      {
+        "name": "Amoxicillin 250mg",
+        "qty": 2,
+        "price": 7.9
+      }
+    ],
+    "subtotal": 15.8,
+    "tax": 2.84,
+    "discount": 0,
+    "total": 18.64,
+    "paymentMethod": "Cash",
+    "date": "2026-02-27",
+    "status": "Returned",
+    "createdAt": "2026-03-01T08:50:59.904Z",
+    "updatedAt": "2026-03-01T08:50:59.904Z"
+  },
+  {
+    "id": "2e2309d3-4c16-4a36-bf11-16db029eef4f",
+    "saleId": "SAL-005",
+    "customer": "Anna Lee",
+    "items": [
+      {
+        "name": "Vitamin D3 1000IU",
+        "qty": 2,
+        "price": 8
+      },
+      {
+        "name": "Loratadine 10mg",
+        "qty": 1,
+        "price": 4
+      },
+      {
+        "name": "Paracetamol 500mg",
+        "qty": 3,
+        "price": 5
+      }
+    ],
+    "subtotal": 35,
+    "tax": 6.3,
+    "discount": 3,
+    "total": 38.3,
+    "paymentMethod": "Debit Card",
+    "date": "2026-02-26",
+    "status": "Completed",
+    "createdAt": "2026-03-01T08:50:59.905Z",
+    "updatedAt": "2026-03-01T08:50:59.905Z"
+  }
+]

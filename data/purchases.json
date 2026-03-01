@@ -1,0 +1,69 @@
+[
+  {
+    "id": "97220e46-18b3-4198-b915-f7529ed2b8d2",
+    "purchaseId": "PO-001",
+    "supplier": "PharmaCorp Inc.",
+    "items": [
+      {
+        "name": "Paracetamol 500mg",
+        "qty": 500,
+        "costPrice": 3.2
+      },
+      {
+        "name": "Aspirin 100mg",
+        "qty": 200,
+        "costPrice": 1.2
+      }
+    ],
+    "total": 1840,
+    "date": "2026-02-20",
+    "status": "Received",
+    "paidAmount": 1840,
+    "paymentStatus": "Paid",
+    "createdAt": "2026-03-01T08:50:59.909Z",
+    "updatedAt": "2026-03-01T08:50:59.909Z"
+  },
+  {
+    "id": "e6a4afb2-3e47-46e6-acca-78311759f4d6",
+    "purchaseId": "PO-002",
+    "supplier": "MediSupply Co.",
+    "items": [
+      {
+        "name": "Amoxicillin 250mg",
+        "qty": 100,
+        "costPrice": 5.1
+      },
+      {
+        "name": "Azithromycin 500mg",
+        "qty": 50,
+        "costPrice": 10
+      }
+    ],
+    "total": 1010,
+    "date": "2026-02-22",
+    "status": "Received",
+    "paidAmount": 500,
+    "paymentStatus": "Partial",
+    "createdAt": "2026-03-01T08:50:59.911Z",
+    "updatedAt": "2026-03-01T08:50:59.911Z"
+  },
+  {
+    "id": "c057d965-6642-48ab-96a9-286246d24bcd",
+    "purchaseId": "PO-003",
+    "supplier": "DiaCare Ltd.",
+    "items": [
+      {
+        "name": "Metformin 500mg",
+        "qty": 300,
+        "costPrice": 4
+      }
+    ],
+    "total": 1200,
+    "date": "2026-02-25",
+    "status": "Pending",
+    "paidAmount": 0,
+    "paymentStatus": "Unpaid",
+    "createdAt": "2026-03-01T08:50:59.913Z",
+    "updatedAt": "2026-03-01T08:50:59.913Z"
+  }
+]

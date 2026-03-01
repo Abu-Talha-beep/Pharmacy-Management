@@ -1,0 +1,46 @@
+[
+  {
+    "id": "41eb06eb-ac71-4095-9798-4bddcc2a9a1a",
+    "username": "admin",
+    "password": "admin123",
+    "name": "James Bond",
+    "role": "Admin",
+    "email": "admin@pharmly.com",
+    "status": "Active",
+    "createdAt": "2026-03-01T08:50:59.915Z",
+    "updatedAt": "2026-03-01T08:50:59.915Z"
+  },
+  {
+    "id": "3da5445f-126e-4e5e-a42e-18087dcb2e4e",
+    "username": "pharmacist",
+    "password": "pharma123",
+    "name": "Sarah Miller",
+    "role": "Pharmacist",
+    "email": "sarah@pharmly.com",
+    "status": "Active",
+    "createdAt": "2026-03-01T08:50:59.916Z",
+    "updatedAt": "2026-03-01T08:50:59.916Z"
+  },
+  {
+    "id": "cae7e6be-edd7-4a17-8f65-306b25b8b2b0",
+    "username": "cashier",
+    "password": "cash123",
+    "name": "Tom Clark",
+    "role": "Cashier",
+    "email": "tom@pharmly.com",
+    "status": "Active",
+    "createdAt": "2026-03-01T08:50:59.917Z",
+    "updatedAt": "2026-03-01T08:50:59.917Z"
+  },
+  {
+    "id": "2666efab-3721-42f5-9e78-320103b7e4d7",
+    "username": "manager",
+    "password": "manager123",
+    "name": "Lisa White",
+    "role": "Store Manager",
+    "email": "lisa@pharmly.com",
+    "status": "Active",
+    "createdAt": "2026-03-01T08:50:59.918Z",
+    "updatedAt": "2026-03-01T08:50:59.918Z"
+  }
+]

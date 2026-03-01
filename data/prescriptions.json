@@ -1,0 +1,34 @@
+[
+  {
+    "id": "3d6c77c7-eae2-4caa-a409-2c0e8b769609",
+    "prescriptionId": "RX-001",
+    "customer": "Sarah Johnson",
+    "doctor": "Dr. Smith",
+    "hospital": "City Hospital",
+    "date": "2026-02-28",
+    "medicines": [
+      "Paracetamol 500mg",
+      "Cetirizine 10mg"
+    ],
+    "notes": "Take after meals",
+    "linkedSale": "SAL-001",
+    "createdAt": "2026-03-01T08:50:59.922Z",
+    "updatedAt": "2026-03-01T08:50:59.922Z"
+  },
+  {
+    "id": "efcdcd67-b275-4247-acf9-384e78afee47",
+    "prescriptionId": "RX-002",
+    "customer": "Emily Davis",
+    "doctor": "Dr. Patel",
+    "hospital": "Metro Clinic",
+    "date": "2026-02-27",
+    "medicines": [
+      "Metformin 500mg",
+      "Atorvastatin 20mg"
+    ],
+    "notes": "Morning and evening",
+    "linkedSale": "SAL-003",
+    "createdAt": "2026-03-01T08:50:59.923Z",
+    "updatedAt": "2026-03-01T08:50:59.923Z"
+  }
+]
